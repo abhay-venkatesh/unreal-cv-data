@@ -11,10 +11,7 @@ if not client.isconnected():
     sys.exit(-1)
 else:
 
-	# Set to object mask mode
-	client.request('vset /viewmode object_mask')
-
-	for batch in range(1,5):
+	for batch in range(1,1001):
 
 		# Get random location
 		z = 300
@@ -27,16 +24,16 @@ else:
 		# Get 10 shots in a series
 		angles = []
 		a = 0
-		while len(angles) < 10:
+		while len(angles) < 20:
 			angles.append(a)
-			a -= 6
+			a -= 3
 
 		# Increment height sequentially
 		heights = []
 		height = 300
-		while len(heights) < 10:
+		while len(heights) < 20:
 			heights.append(height)
-			height += 100
+			height += 50
 
 		for i,angle in enumerate(angles):
 
@@ -46,5 +43,5 @@ else:
 			# Pitch, yaw, roll
 			client.request('vset /camera/0/rotation ' + str(angle) + ' 0 0')
 
-		  	res = client.request('vget /camera/0/lit ./batch' + str(batch) + '/lit' + str(i) + '.png')
+		  	res = client.request('vget /camera/0/object_mask ./batch/round' + str(batch) + '/lit' + str(i) + '.png')
 			print('The image is saved to %s' % res)
