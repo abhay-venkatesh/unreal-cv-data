@@ -1,3 +1,10 @@
+"""
+
+Script that collects data from random locations from game.
+
+"""
+
+
 from __future__ import division, absolute_import, print_function
 import os, sys, time, re, json
 import numpy as np
