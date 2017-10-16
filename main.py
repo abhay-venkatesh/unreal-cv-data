@@ -11,9 +11,26 @@ if not client.isconnected():
 else:
 
 	for round in range(1,5):
-		
 
-		client.request('vset /camera/0/location 5 5 300')
-		client.request('vset /camera/0/rotation 5 5 5')
-	  	res = client.request('vget /camera/0/lit ./batch/lit.png')
-		print('The image is saved to %s' % res)
+		# Get random location
+		z = 300
+		x = randint(-5000, 5000)
+		y = randint(-5000, 5000)
+
+		# Coordinates x, y, z
+		client.request('vset /camera/0/location ' + str(x) + ' ' + str(y) + ' ' + str(z)) 
+
+		# Get 10 shots in a series
+		angles = []
+		a = 6
+		while len(angles) < 10:
+			angles.append(a)
+			a += 6
+
+		for angle in angles:
+
+			# Pitch, yaw, roll
+			client.request('vset /camera/0/rotation ' + angle + 0 0 0')
+
+		  	res = client.request('vget /camera/0/lit ./batch/lit.png')
+			print('The image is saved to %s' % res)
