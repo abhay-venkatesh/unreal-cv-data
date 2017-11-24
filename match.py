@@ -25,18 +25,23 @@ for color in color2class:
 	color_map[literal_eval(color)] = class2num[color2class[color]]
 
 with open('list','r') as f:
-	for line in f:
-		filename = line.strip()
+	for i,line in enumerate(f):
+		itemname = line.strip()
+		filename = '../../../segmentation_data/batch1/' + itemname
 		img = cv2.imread(filename)
 		img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 		[m,n] = img.shape[:2]
 		res = np.zeros((m,n))
+
+		print("Working on" + filename)
 
 		for key in color_map:
 			match_region=match_color(img,key)
 			if not (match_region is None):
 				res = (np.multiply(res, ~match_region)) + match_region*color_map[key]
 
-		cv2.imwrite(filename,res*8)
+		outfile = 'converted_data/' + str(i) + '.png' 
+		print(outfile)
+		cv2.imwrite(outfile,res*8)
 
 
