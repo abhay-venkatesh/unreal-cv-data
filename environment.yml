@@ -1,3 +1,5 @@
 name: unreal-cv-data
 dependencies:
 - python=3.7
+- jupyter
+- matplotlib
