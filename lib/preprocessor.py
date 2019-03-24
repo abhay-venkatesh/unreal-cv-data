@@ -5,19 +5,6 @@ import json
 import os
 import re
 import csv
-"""
-Have:
-object_id -> color
-
-Want:
-object_id -> class
-class -> color
-
-How to:
-1. Build obj_to_class [X]
-2. Build class_to_color
-
-"""
 
 
 class Color(object):
@@ -38,7 +25,6 @@ class PreProcessor:
     def __init__(self, dest_dir):
         self.dest_dir = Path(dest_dir, "json")
         self.obj_to_color_file = Path(self.dest_dir, "obj_to_color.json")
-        # self.classes_file = Path(self.dest_dir, "classes.csv")
         self.obj_to_class_file = Path(self.dest_dir, "obj_to_class.json")
         self.class_to_color_file = Path(self.dest_dir, "class_to_color.json")
 
@@ -91,10 +77,20 @@ class PreProcessor:
             obj_to_class = json.load(json_file)
 
         class_to_color = {}
-        for obj in obj_to_class.keys():
-            class_ = obj_to_class[obj]
-            if class_ not in class_to_color.keys():
-                class_to_color[class_] = obj_to_colors[obj]
+        if os.path.exists(Path(self.dest_dir, "target_class_to_color.csv")):
+            with open(Path(self.dest_dir,
+                           "target_class_to_color.csv")) as csv_file:
+                reader = csv.reader(csv_file, delimiter=",")
+                for row in reader:
+                    class_ = row[0]
+                    r, g, b = row[1], row[2], row[3]
+                    color = "(R={r},G={g},B={b},A=255)".format(r=r, g=g, b=b)
+                    class_to_color[class_] = color
+        else:
+            for obj in obj_to_class.keys():
+                class_ = obj_to_class[obj]
+                if class_ not in class_to_color.keys():
+                    class_to_color[class_] = obj_to_colors[obj]
 
         with open(self.class_to_color_file, 'w') as json_file:
             json.dump(class_to_color, json_file)
