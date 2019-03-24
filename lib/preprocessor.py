@@ -5,6 +5,18 @@ import json
 import os
 import re
 import csv
+"""
+Have:
+object_id -> colors
+
+Want:
+object_id -> class
+class -> color
+
+How to:
+1. Build obj_to_class 
+
+"""
 
 
 class Color(object):
@@ -24,13 +36,14 @@ class Color(object):
 class PreProcessor:
     def __init__(self, dest_dir):
         self.dest_dir = Path(dest_dir, "json")
-        self.colors_file = Path(self.dest_dir, "colors.json")
-        self.classes_file = Path(self.dest_dir, "classes.csv")
+        self.obj_to_colors_file = Path(self.dest_dir, "obj_to_colors.json")
+        # self.classes_file = Path(self.dest_dir, "classes.csv")
+        self.obj_to_class_file = Path(self.dest_dir, "obj_to_class.json")
 
     def preprocess(self):
-        if not os.path.exists(self.colors_file):
+        if not os.path.exists(self.obj_to_colors_file):
             self._get_colors()
-        self._condense_colors()
+        self._build_obj_to_class()
 
     def _get_colors(self):
         client.connect()
@@ -48,6 +61,10 @@ class PreProcessor:
             json.dump(colors, fp)
 
         client.disconnect()
+    
+    def _build_obj_to_class(self):
+        with open(self.obj_to_class_file) as json_file:
+            obj_to_class = json.load(json_file)
 
     def _condense_colors(self):
         classes = set()
