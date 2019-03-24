@@ -23,7 +23,7 @@ class Color(object):
 
 class PreProcessor:
     def __init__(self, dest_dir):
-        self.dest_dir = Path(dest_dir, "data")
+        self.dest_dir = Path(dest_dir, "info")
         self.obj_to_color_file = Path(self.dest_dir, "obj_to_color.json")
         self.obj_to_class_file = Path(self.dest_dir, "obj_to_class.json")
         self.class_to_color_file = Path(self.dest_dir, "class_to_color.json")
