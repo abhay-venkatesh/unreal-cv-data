@@ -1,10 +1,10 @@
 from pathlib import Path
 from tqdm import tqdm
 from unrealcv import client
+import csv
 import json
 import os
 import re
-import csv
 
 
 class Color(object):
@@ -35,6 +35,26 @@ class PreProcessor:
             self._build_obj_to_class()
         if not os.path.exists(self.class_to_color_file):
             self._build_class_to_color()
+        self._set_env_colors()
+
+    def _set_env_colors(self):
+        with open(self.obj_to_class_file) as json_file:
+            obj_to_class = json.load(json_file)
+        with open(self.class_to_color_file) as json_file:
+            class_to_color = json.load(json_file)
+
+        client.connect()
+        if not client.isconnected():
+            raise RuntimeError("Could not connect to client. ")
+
+        for obj in tqdm(obj_to_class.keys()):
+            class_ = obj_to_class[obj]
+            color = Color(class_to_color[class_])
+            client.request(
+                ("vset /object/" + obj + "/color {r} {g} {b}").format(
+                    r=color.R, g=color.G, b=color.B))
+
+        client.disconnect()
 
     def _build_obj_to_color(self):
         client.connect()
