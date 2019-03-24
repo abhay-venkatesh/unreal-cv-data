@@ -1,6 +1,15 @@
 import re
 
 
+def colors_match(source_color, target_color, tolerance=3):
+    return ((source_color.R >= target_color.R - tolerance
+             and source_color.R <= target_color.R + tolerance)
+            and (source_color.G >= target_color.G - tolerance
+                 and source_color.G <= target_color.G + tolerance)
+            and (source_color.B >= target_color.B - tolerance
+                 and source_color.B <= target_color.B + tolerance))
+
+
 class Color(object):
     ''' A utility class to parse color value '''
     regexp = re.compile('\(R=(.*),G=(.*),B=(.*),A=(.*)\)')  # noqa W605

@@ -1,4 +1,4 @@
-from lib.misc import Color
+from lib.misc import Color, colors_match
 from pathlib import Path
 from tqdm import tqdm
 from unrealcv import client
@@ -13,37 +13,51 @@ class PreProcessor:
         self.obj_to_color_file = Path(self.dest_dir, "obj_to_color.json")
         self.obj_to_class_file = Path(self.dest_dir, "obj_to_class.json")
         self.class_to_color_file = Path(self.dest_dir, "class_to_color.json")
-
-    def preprocess(self):
         if not os.path.exists(self.obj_to_color_file):
             self._build_obj_to_color()
+        else:
+            with open(self.obj_to_color_file) as json_file:
+                self.obj_to_color = json.load(json_file)
+
         if not os.path.exists(self.obj_to_class_file):
             self._build_obj_to_class()
+        else:
+            with open(self.obj_to_class_file) as json_file:
+                self.obj_to_class = json.load(json_file)
+
         if not os.path.exists(self.class_to_color_file):
             self._build_class_to_color()
+        else:
+            with open(self.class_to_color_file) as json_file:
+                self.class_to_color = json.load(json_file)
+
+    def preprocess(self):
         self._set_env_colors()
 
     def get_obj_from_color(self, color):
-        with open(self.obj_to_color_file) as json_file:
-            obj_to_color = json.load(json_file)
-        for obj, color_ in obj_to_color.items():
+        for obj, color_ in self.obj_to_color.items():
             color_ = Color(color_)
-            if color_ == color:
+            if colors_match(color, color_):
                 return obj
 
-    def _set_env_colors(self):
-        with open(self.obj_to_color_file) as json_file:
-            obj_to_color = json.load(json_file)
-        with open(self.obj_to_class_file) as json_file:
-            obj_to_class = json.load(json_file)
-        with open(self.class_to_color_file) as json_file:
-            class_to_color = json.load(json_file)
+    def condense_colors(self):
+        condensed_obj_to_color = {}
+        for obj, color in self.obj_to_color.items():
+            if obj in self.obj_to_class.keys():
+                condensed_obj_to_color[self.obj_to_class[obj]] = color
+            else:
+                condensed_obj_to_color[obj] = color
 
+        with open(Path(self.dest_dir, "condensed_obj_to_color.json"),
+                  'w') as json_file:
+            json.dump(condensed_obj_to_color, json_file)
+
+    def _set_env_colors(self):
         print("Setting colors...")
-        for obj in tqdm(obj_to_color.keys()):
-            if obj in obj_to_class.keys():
-                class_ = obj_to_class[obj]
-                color = Color(class_to_color[class_])
+        for obj in tqdm(self.obj_to_color.keys()):
+            if obj in self.obj_to_class.keys():
+                class_ = self.obj_to_class[obj]
+                color = Color(self.class_to_color[class_])
                 request_str = (
                     "vset /object/" + obj + "/color {r} {g} {b}").format(
                         r=color.R, g=color.G, b=color.B)

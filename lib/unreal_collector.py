@@ -23,7 +23,7 @@ class UnrealCollector:
             raise RuntimeError("Could not connect to client. ")
 
         # First we prepare the Unreal Engine environment by preprocessing it
-        PreProcessor(self.environment_folder).preprocess()
+        # PreProcessor(self.environment_folder).preprocess()
 
         # Then we build our dataset
         Builder(self.environment_folder).build(400)
@@ -33,3 +33,7 @@ class UnrealCollector:
     def get_obj_from_color(self, color):
         pp = PreProcessor(self.environment_folder)
         return pp.get_obj_from_color(color)
+
+    def condense_colors(self):
+        pp = PreProcessor(self.environment_folder)
+        pp.condense_colors()

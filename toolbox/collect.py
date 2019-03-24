@@ -1,5 +1,4 @@
 from lib.unreal_collector import UnrealCollector
-from unrealcv import client
 
 
 def setup():
@@ -21,6 +20,6 @@ def setup():
     return ENVIRONMENT_NAME
 
 
-if __name__ == "__main__":
+def collect():
     environment_name = setup()
     UnrealCollector(environment_name).collect()
