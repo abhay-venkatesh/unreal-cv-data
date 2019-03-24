@@ -38,18 +38,25 @@ class PreProcessor:
         self._set_env_colors()
 
     def _set_env_colors(self):
+        with open(self.obj_to_color_file) as json_file:
+            obj_to_color = json.load(json_file)
         with open(self.obj_to_class_file) as json_file:
             obj_to_class = json.load(json_file)
         with open(self.class_to_color_file) as json_file:
             class_to_color = json.load(json_file)
 
         print("Setting colors...")
-        for obj in tqdm(obj_to_class.keys()):
-            class_ = obj_to_class[obj]
-            color = Color(class_to_color[class_])
-            request_str = (
-                "vset /object/" + obj + "/color {r} {g} {b}").format(
-                    r=color.R, g=color.G, b=color.B)
+        for obj in tqdm(obj_to_color.keys()):
+            if obj in obj_to_class.keys():
+                class_ = obj_to_class[obj]
+                color = Color(class_to_color[class_])
+                request_str = (
+                    "vset /object/" + obj + "/color {r} {g} {b}").format(
+                        r=color.R, g=color.G, b=color.B)
+            else:
+                request_str = (
+                    "vset /object/" + obj + "/color {r} {g} {b}").format(
+                        r=0, g=0, b=0)
             client.request(request_str)
 
     def _build_obj_to_color(self):
@@ -65,13 +72,13 @@ class PreProcessor:
 
     def _build_obj_to_class(self):
         with open(self.obj_to_color_file) as json_file:
-            obj_to_colors = json.load(json_file)
+            obj_to_color = json.load(json_file)
 
         with open(Path(self.dest_dir, "startstr_to_class.json")) as json_file:
             startstr_to_class = json.load(json_file)
 
         obj_to_class = {}
-        for obj in obj_to_colors.keys():
+        for obj in obj_to_color.keys():
             for startstr in startstr_to_class.keys():
                 if obj.startswith(startstr):
                     obj_to_class[obj] = startstr_to_class[startstr]
