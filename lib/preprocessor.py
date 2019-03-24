@@ -47,9 +47,10 @@ class PreProcessor:
         for obj in tqdm(obj_to_class.keys()):
             class_ = obj_to_class[obj]
             color = Color(class_to_color[class_])
-            client.request(
-                ("vset /object/" + obj + "/color {r} {g} {b}").format(
-                    r=color.R, g=color.G, b=color.B))
+            request_str = (
+                "vset /object/" + obj + "/color {r} {g} {b}").format(
+                    r=color.R, g=color.G, b=color.B)
+            client.request(request_str)
 
     def _build_obj_to_color(self):
         scene_objects = client.request('vget /objects').split(' ')
