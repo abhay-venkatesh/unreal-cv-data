@@ -1,10 +1,11 @@
-from pathlib import Path
-import os
-import random
-from unrealcv import client
 from PIL import Image
 from io import BytesIO
+from pathlib import Path
 from tqdm import tqdm
+from unrealcv import client
+import os
+import random
+import time
 
 
 class Builder:
@@ -14,10 +15,14 @@ class Builder:
     X_RANGE = 18000
     Y_RANGE = 14000
 
-    def __init__(self):
-        self.dataset_dir = Path("dataset")
-        if not os.path.exists(self.dataset_dir):
-            os.mkdir(self.dataset_dir)
+    def __init__(self, environment_folder):
+        self.dataset_dir = Path(environment_folder, "dataset")
+        self.images_folder = Path(self.dataset_dir, "images")
+        self.masks_folder = Path(self.dataset_dir, "masks")
+        paths = [self.dataset_dir, self.images_folder, self.masks_folder]
+        for path in paths:
+            if not os.path.exists(path):
+                os.mkdir(path)
 
     def build(self, length):
         client.connect()
@@ -38,10 +43,14 @@ class Builder:
         client.request(('vset /camera/0/rotation {pitch} {yaw} {roll}').format(
             pitch=self.PITCH, yaw=yaw, roll=self.ROLL))
 
+        time.sleep(1)
+
         lit = client.request('vget /camera/0/lit png')
         lit_img = Image.open(BytesIO(lit))
-        lit_img.save(Path(self.dataset_dir, "images", str(i) + ".png"))
+        lit_img.save(Path(self.images_folder, str(i) + ".png"))
+
+        time.sleep(1)
 
         mask = client.request('vget /camera/0/object_mask png')
         mask_img = Image.open(BytesIO(mask))
-        mask_img.save(Path(self.dataset_dir, "masks", str(i) + ".png"))
+        mask_img.save(Path(self.masks_folder, str(i) + ".png"))

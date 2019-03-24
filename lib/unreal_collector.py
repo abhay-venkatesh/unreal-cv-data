@@ -7,10 +7,10 @@ import os
 class UnrealCollector:
     def __init__(self, environment_name):
         self.environment_name = environment_name
-        self.collection_dir = Path("environments", self.environment_name)
+        self.environment_folder = Path("environments", self.environment_name)
         paths = [
             Path("environments"),
-            self.collection_dir,
+            self.environment_folder,
         ]
         for path in paths:
             if not os.path.exists(path):
@@ -18,7 +18,7 @@ class UnrealCollector:
 
     def collect(self):
         # First we prepare the Unreal Engine environment by preprocessing it
-        PreProcessor(self.collection_dir).preprocess()
+        PreProcessor(self.environment_folder).preprocess()
 
         # Then we build our dataset
-        Builder(self.collection_dir).build()
+        Builder(self.environment_folder).build(400)
