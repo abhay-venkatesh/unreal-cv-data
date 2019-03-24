@@ -61,10 +61,22 @@ class PreProcessor:
             json.dump(colors, fp)
 
         client.disconnect()
-    
+
     def _build_obj_to_class(self):
-        with open(self.obj_to_class_file) as json_file:
-            obj_to_class = json.load(json_file)
+        with open(self.obj_to_colors_file) as json_file:
+            obj_to_colors = json.load(json_file)
+
+        with open(Path(self.dest_dir, "startstr_to_class.json")) as json_file:
+            startstr_to_class = json.load(json_file)
+
+        obj_to_class = {}
+        for obj in obj_to_colors.keys():
+            for startstr in startstr_to_class.keys():
+                if obj.startswith(startstr):
+                    obj_to_class[obj] = startstr_to_class[startstr]
+
+        with open(self.obj_to_class_file, 'w') as json_file:
+            json.dump(obj_to_class, json_file)
 
     def _condense_colors(self):
         classes = set()
