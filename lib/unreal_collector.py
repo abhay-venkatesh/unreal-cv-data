@@ -21,5 +21,4 @@ class UnrealCollector:
         PreProcessor(self.collection_dir).preprocess()
 
         # Then we build our dataset
-        raise NotImplementedError
         Builder(self.collection_dir).build()
