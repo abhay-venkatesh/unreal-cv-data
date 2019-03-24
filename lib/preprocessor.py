@@ -43,10 +43,7 @@ class PreProcessor:
         with open(self.class_to_color_file) as json_file:
             class_to_color = json.load(json_file)
 
-        client.connect()
-        if not client.isconnected():
-            raise RuntimeError("Could not connect to client. ")
-
+        print("Setting colors...")
         for obj in tqdm(obj_to_class.keys()):
             class_ = obj_to_class[obj]
             color = Color(class_to_color[class_])
@@ -54,13 +51,7 @@ class PreProcessor:
                 ("vset /object/" + obj + "/color {r} {g} {b}").format(
                     r=color.R, g=color.G, b=color.B))
 
-        client.disconnect()
-
     def _build_obj_to_color(self):
-        client.connect()
-        if not client.isconnected():
-            raise RuntimeError("Could not connect to client. ")
-
         scene_objects = client.request('vget /objects').split(' ')
         print('Number of objects in this scene:', len(scene_objects))
 
@@ -70,8 +61,6 @@ class PreProcessor:
             colors[scene_obj] = client.request(request_str)
         with open(self.colors_file, 'w') as fp:
             json.dump(colors, fp)
-
-        client.disconnect()
 
     def _build_obj_to_class(self):
         with open(self.obj_to_color_file) as json_file:

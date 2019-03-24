@@ -25,14 +25,9 @@ class Builder:
                 os.mkdir(path)
 
     def build(self, length):
-        client.connect()
-        if not client.isconnected():
-            raise RuntimeError("Could not connect to client. ")
-
+        print("Building dataset...")
         for i in tqdm(range(length)):
             self._capture_mask(i)
-
-        client.disconnect()
 
     def _capture_mask(self, i):
         x = random.uniform(-self.X_RANGE, self.X_RANGE)

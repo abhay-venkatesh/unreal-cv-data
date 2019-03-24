@@ -1,6 +1,7 @@
-from lib.preprocessor import PreProcessor
 from lib.builder import Builder
+from lib.preprocessor import PreProcessor
 from pathlib import Path
+from unrealcv import client
 import os
 
 
@@ -17,8 +18,14 @@ class UnrealCollector:
                 os.mkdir(path)
 
     def collect(self):
+        client.connect()
+        if not client.isconnected():
+            raise RuntimeError("Could not connect to client. ")
+
         # First we prepare the Unreal Engine environment by preprocessing it
         PreProcessor(self.environment_folder).preprocess()
 
         # Then we build our dataset
         Builder(self.environment_folder).build(400)
+
+        client.disconnect()
