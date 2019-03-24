@@ -43,10 +43,12 @@ class PreProcessor:
         self.class_to_color_file = Path(self.dest_dir, "class_to_color.json")
 
     def preprocess(self):
-        if not os.path.exists(self.obj_to_colors_file):
+        if not os.path.exists(self.obj_to_color_file):
             self._build_obj_to_color()
         if not os.path.exists(self.obj_to_class_file):
             self._build_obj_to_class()
+        if not os.path.exists(self.class_to_color_file):
+            self._build_class_to_color()
 
     def _build_obj_to_color(self):
         client.connect()
@@ -66,7 +68,7 @@ class PreProcessor:
         client.disconnect()
 
     def _build_obj_to_class(self):
-        with open(self.obj_to_colors_file) as json_file:
+        with open(self.obj_to_color_file) as json_file:
             obj_to_colors = json.load(json_file)
 
         with open(Path(self.dest_dir, "startstr_to_class.json")) as json_file:
@@ -82,7 +84,7 @@ class PreProcessor:
             json.dump(obj_to_class, json_file)
 
     def _build_class_to_color(self):
-        with open(self.obj_to_colors_file) as json_file:
+        with open(self.obj_to_color_file) as json_file:
             obj_to_colors = json.load(json_file)
 
         with open(self.obj_to_class_file) as json_file:
