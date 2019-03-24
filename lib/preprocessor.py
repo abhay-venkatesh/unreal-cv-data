@@ -77,37 +77,3 @@ class PreProcessor:
 
         with open(self.obj_to_class_file, 'w') as json_file:
             json.dump(obj_to_class, json_file)
-
-    def _condense_colors(self):
-        classes = set()
-        with open(self.classes_file) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=',')
-            for row in csv_reader:
-                classes.add(row[0])
-        with open(self.colors_file) as json_file:
-            colors = json.load(json_file)
-
-        condensed_colors = {}
-        scene_obj_to_class = {}
-        for scene_obj, rgba in colors.items():
-            class_name_one = scene_obj.split("_")[0]
-            class_name_two = "_".join(scene_obj.split("_")[:2])
-            class_name = None
-            if class_name_one in classes:
-                class_name = class_name_one
-            elif class_name_two in classes:
-                class_name = class_name_two
-
-            if class_name:
-                if class_name not in condensed_colors.keys():
-                    condensed_colors[class_name] = rgba
-                scene_obj_to_class[scene_obj] = class_name
-            else:
-                condensed_colors[scene_obj] = rgba
-
-        with open(Path(self.dest_dir, "condensed_colors.json"),
-                  'w') as json_file:
-            json.dump(condensed_colors, json_file)
-        with open(Path(self.dest_dir, "scene_obj_to_class.json"),
-                  'w') as json_file:
-            json.dump(scene_obj_to_class, json_file)
