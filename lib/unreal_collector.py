@@ -29,3 +29,7 @@ class UnrealCollector:
         Builder(self.environment_folder).build(400)
 
         client.disconnect()
+
+    def get_obj_from_color(self, color):
+        pp = PreProcessor(self.environment_folder)
+        return pp.get_obj_from_color(color)

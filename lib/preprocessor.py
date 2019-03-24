@@ -1,24 +1,10 @@
+from lib.misc import Color
 from pathlib import Path
 from tqdm import tqdm
 from unrealcv import client
 import csv
 import json
 import os
-import re
-
-
-class Color(object):
-    ''' A utility class to parse color value '''
-    regexp = re.compile('\(R=(.*),G=(.*),B=(.*),A=(.*)\)')  # noqa W605
-
-    def __init__(self, color_str):
-        self.color_str = color_str
-        match = self.regexp.match(color_str)
-        (self.R, self.G, self.B,
-         self.A) = [int(match.group(i)) for i in range(1, 5)]
-
-    def __repr__(self):
-        return self.color_str
 
 
 class PreProcessor:
@@ -36,6 +22,14 @@ class PreProcessor:
         if not os.path.exists(self.class_to_color_file):
             self._build_class_to_color()
         self._set_env_colors()
+
+    def get_obj_from_color(self, color):
+        with open(self.obj_to_color_file) as json_file:
+            obj_to_color = json.load(json_file)
+        for obj, color_ in obj_to_color.items():
+            color_ = Color(color_)
+            if color_ == color:
+                return obj
 
     def _set_env_colors(self):
         with open(self.obj_to_color_file) as json_file:
