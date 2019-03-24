@@ -23,7 +23,7 @@ class UnrealCollector:
             raise RuntimeError("Could not connect to client. ")
 
         # First we prepare the Unreal Engine environment by preprocessing it
-        # PreProcessor(self.environment_folder).preprocess()
+        PreProcessor(self.environment_folder).preprocess()
 
         # Then we build our dataset
         Builder(self.environment_folder).build(400)
