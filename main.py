@@ -1,6 +1,4 @@
-from lib.preprocessor import PreProcessor
-from lib.builder import Builder
+from lib.unreal_collector import UnrealCollector
 
 if __name__ == "__main__":
-    Builder().build()
-    PreProcessor().preprocess()
+    UnrealCollector("modular_neighborhood").collect()

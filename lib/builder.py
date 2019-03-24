@@ -15,14 +15,11 @@ class Builder:
     Y_RANGE = 14000
 
     def __init__(self):
-        raise NotImplementedError
-
         self.dataset_dir = Path("dataset")
         if not os.path.exists(self.dataset_dir):
             os.mkdir(self.dataset_dir)
 
     def build(self, length):
-        raise NotImplementedError
         client.connect()
         if not client.isconnected():
             raise RuntimeError("Could not connect to client. ")
@@ -33,7 +30,6 @@ class Builder:
         client.disconnect()
 
     def _capture_mask(self, i):
-
         x = random.uniform(-self.X_RANGE, self.X_RANGE)
         y = random.uniform(-self.Y_RANGE, self.Y_RANGE)
         yaw = random.uniform(0, 360)
