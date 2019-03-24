@@ -2,6 +2,7 @@ from pathlib import Path
 from tqdm import tqdm
 from unrealcv import client
 import json
+import os
 import re
 
 
@@ -22,9 +23,11 @@ class Color(object):
 class PreProcessor:
     def __init__(self, dest_dir):
         self.dest_dir = dest_dir
+        self.colors_file = Path(self.dest_dir, "colors.json")
 
     def preprocess(self):
-        self._get_colors()
+        if not os.path.exists(self.colors_file):
+            self._get_colors()
 
     def _get_colors(self):
         client.connect()
@@ -38,5 +41,7 @@ class PreProcessor:
         for scene_obj in tqdm(scene_objects):
             request_str = "vget /object/" + scene_obj + "/color"
             colors[scene_obj] = client.request(request_str)
-        with open(Path(self.dest_dir, "colors.json"), 'w') as fp:
+        with open(self.colors_file, 'w') as fp:
             json.dump(colors, fp)
+
+        client.disconnect()
