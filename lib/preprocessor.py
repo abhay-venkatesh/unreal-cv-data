@@ -7,14 +7,15 @@ import re
 import csv
 """
 Have:
-object_id -> colors
+object_id -> color
 
 Want:
 object_id -> class
 class -> color
 
 How to:
-1. Build obj_to_class 
+1. Build obj_to_class [X]
+2. Build class_to_color
 
 """
 
@@ -36,16 +37,18 @@ class Color(object):
 class PreProcessor:
     def __init__(self, dest_dir):
         self.dest_dir = Path(dest_dir, "json")
-        self.obj_to_colors_file = Path(self.dest_dir, "obj_to_colors.json")
+        self.obj_to_color_file = Path(self.dest_dir, "obj_to_color.json")
         # self.classes_file = Path(self.dest_dir, "classes.csv")
         self.obj_to_class_file = Path(self.dest_dir, "obj_to_class.json")
+        self.class_to_color_file = Path(self.dest_dir, "class_to_color.json")
 
     def preprocess(self):
         if not os.path.exists(self.obj_to_colors_file):
-            self._get_colors()
-        self._build_obj_to_class()
+            self._build_obj_to_color()
+        if not os.path.exists(self.obj_to_class_file):
+            self._build_obj_to_class()
 
-    def _get_colors(self):
+    def _build_obj_to_color(self):
         client.connect()
         if not client.isconnected():
             raise RuntimeError("Could not connect to client. ")
@@ -77,3 +80,19 @@ class PreProcessor:
 
         with open(self.obj_to_class_file, 'w') as json_file:
             json.dump(obj_to_class, json_file)
+
+    def _build_class_to_color(self):
+        with open(self.obj_to_colors_file) as json_file:
+            obj_to_colors = json.load(json_file)
+
+        with open(self.obj_to_class_file) as json_file:
+            obj_to_class = json.load(json_file)
+
+        class_to_color = {}
+        for obj in obj_to_class.keys():
+            class_ = obj_to_class[obj]
+            if class_ not in class_to_color.keys():
+                class_to_color[class_] = obj_to_colors[obj]
+
+        with open(self.class_to_color_file, 'w') as json_file:
+            json.dump(class_to_color, json_file)
