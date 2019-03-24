@@ -8,3 +8,8 @@ Extracting Ground Truth imagery from Unreal Engine using [UnrealCV](https://gith
 $ conda env create
 $ pip install -r requirements.txt
 ```
+
+Then, read main.py before running 
+```
+$ python main.py
+```
