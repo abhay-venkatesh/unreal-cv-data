@@ -41,6 +41,7 @@ class PreProcessor:
                 return obj
 
     def condense_colors(self):
+
         condensed_obj_to_color = {}
         for obj, color in self.obj_to_color.items():
             if obj in self.obj_to_class.keys():
@@ -48,9 +49,26 @@ class PreProcessor:
             else:
                 condensed_obj_to_color[obj] = color
 
+        startstr_to_delete = []
+        if os.path.exists(Path(self.dest_dir, "startstr_to_delete.csv")):
+            with open(Path(self.dest_dir,
+                           "startstr_to_delete.csv")) as csv_file:
+                reader = csv.reader(csv_file, delimiter=",")
+                for row in reader:
+                    startstr_to_delete.append(row[0])
+
+        condensed_obj_to_color_ = {}
+        for obj, color in condensed_obj_to_color.items():
+            should_delete = False
+            for startstr in startstr_to_delete:
+                if obj.startswith(startstr):
+                    should_delete = True
+            if not should_delete:
+                condensed_obj_to_color_[obj] = color
+
         with open(Path(self.dest_dir, "condensed_obj_to_color.json"),
                   'w') as json_file:
-            json.dump(condensed_obj_to_color, json_file)
+            json.dump(condensed_obj_to_color_, json_file)
 
     def _set_env_colors(self):
         print("Setting colors...")
