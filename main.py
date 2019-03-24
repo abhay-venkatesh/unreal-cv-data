@@ -5,7 +5,7 @@ from unrealcv import client
 def setup():
     # First, setup your Unreal Engine 4 environment,
 
-    # Then, setup the config file
+    # Then, setup the config file using the following prompt
     # client.connect()
     # if not client.isconnected():
     #     raise RuntimeError("Could not connect to client. ")
