@@ -26,7 +26,7 @@ class UnrealCollector:
         PreProcessor(self.environment_folder).preprocess()
 
         # Then we build our dataset
-        Builder(self.environment_folder).build(400)
+        Builder(self.environment_folder).build(4000)
 
         client.disconnect()
 
