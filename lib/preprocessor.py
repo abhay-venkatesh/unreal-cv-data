@@ -10,21 +10,23 @@ import os
 class PreProcessor:
     def __init__(self, dest_dir):
         self.dest_dir = Path(dest_dir, "info")
+
+        # Environment information stored in JSON files
         self.obj_to_color_file = Path(self.dest_dir, "obj_to_color.json")
         self.obj_to_class_file = Path(self.dest_dir, "obj_to_class.json")
         self.class_to_color_file = Path(self.dest_dir, "class_to_color.json")
+
+        # Load JSON files
         if not os.path.exists(self.obj_to_color_file):
             self._build_obj_to_color()
         else:
             with open(self.obj_to_color_file) as json_file:
                 self.obj_to_color = json.load(json_file)
-
         if not os.path.exists(self.obj_to_class_file):
             self._build_obj_to_class()
         else:
             with open(self.obj_to_class_file) as json_file:
                 self.obj_to_class = json.load(json_file)
-
         if not os.path.exists(self.class_to_color_file):
             self._build_class_to_color()
         else:
