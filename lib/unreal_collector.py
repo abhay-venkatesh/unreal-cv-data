@@ -17,16 +17,17 @@ class UnrealCollector:
             if not os.path.exists(path):
                 os.mkdir(path)
 
-    def collect(self):
+    def collect(self, count=400, preprocess=True):
         client.connect()
         if not client.isconnected():
             raise RuntimeError("Could not connect to client. ")
 
         # First we prepare the Unreal Engine environment by preprocessing it
-        PreProcessor(self.environment_folder).preprocess()
+        if preprocess:
+            PreProcessor(self.environment_folder).preprocess()
 
         # Then we build our dataset
-        Builder(self.environment_folder).build(4000)
+        Builder(self.environment_folder).build(count)
 
         client.disconnect()
 
