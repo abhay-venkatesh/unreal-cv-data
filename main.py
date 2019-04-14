@@ -1,5 +1,7 @@
-from toolbox.collect import collect
-# Select the tool from the toolbox you are interested in.
+import importlib
 
 if __name__ == "__main__":
-    collect("modular_neighborhood")
+    """ Uncomment the tool you are interested in """
+
+    # importlib.import_module("toolbox.collect").collect("modular_neighborhood")
+    importlib.import_module("toolbox.build_default_dataset").build()
