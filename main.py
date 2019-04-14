@@ -5,4 +5,4 @@ if __name__ == "__main__":
 
     # im("toolbox.collect").collect("modular_neighborhood")
     # im("toolbox.build_default_dataset").build()
-    im("toolbox.find_class").find_class(rgba="(R=46,G=159,B=0,A=255)")
+    im("toolbox.find_class").find_class(rgba="(R=78,G=111,B=159,A=255)")
