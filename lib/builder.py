@@ -49,3 +49,12 @@ class Builder:
         mask = client.request('vget /camera/0/object_mask png')
         mask_img = Image.open(BytesIO(mask))
         mask_img.save(Path(self.masks_folder, str(i) + ".png"))
+
+    def get_random_points(self, count):
+        return [self._get_random_point() for _ in range(count)]
+
+    def _get_random_point(self):
+        x = random.uniform(-self.X_RANGE, self.X_RANGE)
+        y = random.uniform(-self.Y_RANGE, self.Y_RANGE)
+        yaw = random.uniform(0, 360)
+        return (x, y, yaw)
