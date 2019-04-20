@@ -31,9 +31,9 @@ class UnrealCollector:
 
         client.disconnect()
 
-    def get_obj_from_color(self, color):
+    def get_objs_from_color(self, color):
         pp = PreProcessor(self.environment_folder)
-        return pp.get_obj_from_color(color)
+        return pp.get_objs_from_color(color)
 
     def condense_colors(self):
         pp = PreProcessor(self.environment_folder)

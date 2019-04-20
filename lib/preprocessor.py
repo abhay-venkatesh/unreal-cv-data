@@ -36,11 +36,13 @@ class PreProcessor:
     def preprocess(self):
         self._set_env_colors()
 
-    def get_obj_from_color(self, color):
+    def get_objs_from_color(self, color):
+        matched = []
         for obj, color_ in self.obj_to_color.items():
             color_ = Color(color_)
             if colors_match(color, color_):
-                return obj
+                matched.append(obj)
+        return matched
 
     def condense_colors(self):
 
