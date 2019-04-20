@@ -1,10 +1,11 @@
 from lib.builder import Builder
 from lib.preprocessor import PreProcessor
+from lib.unreal_collector import UnrealCollector
 from unrealcv import client
 
 
 def build():
-    environment_folder = "testing"
+    environment_folder = UnrealCollector("testing").environment_folder
 
     client.connect()
     if not client.isconnected():
