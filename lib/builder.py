@@ -33,6 +33,9 @@ class Builder:
         x = random.uniform(-self.X_RANGE, self.X_RANGE)
         y = random.uniform(-self.Y_RANGE, self.Y_RANGE)
         yaw = random.uniform(0, 360)
+        self._capture(x, y, yaw)
+
+    def _capture(self, x, y, yaw, i):
         client.request(('vset /camera/0/location {x} {y} {z}').format(
             x=x, y=y, z=self.Z_COORD))
         client.request(('vset /camera/0/rotation {pitch} {yaw} {roll}').format(
@@ -52,6 +55,11 @@ class Builder:
 
     def get_random_points(self, count):
         return [self._get_random_point() for _ in range(count)]
+
+    def build_from_points(self, points):
+        for i, point in tqdm(enumerate(points)):
+            x, y, yaw = point
+            self._capture(x, y, yaw, i)
 
     def _get_random_point(self):
         x = random.uniform(-self.X_RANGE, self.X_RANGE)
