@@ -9,4 +9,4 @@ if __name__ == "__main__":
     """
     # im("toolbox.build_testing_dataset").build()
     # im("toolbox.build_default_dataset").build()
-    im("toolbox.find_class").find_class(rgba="(R=0,G=255,B=0,A=255)")
+    im("toolbox.find_class").find_class(rgba="(R=0,G=0,B=207,A=255)")
