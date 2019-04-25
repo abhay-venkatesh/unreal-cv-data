@@ -33,7 +33,7 @@ class Builder:
         x = random.uniform(-self.X_RANGE, self.X_RANGE)
         y = random.uniform(-self.Y_RANGE, self.Y_RANGE)
         yaw = random.uniform(0, 360)
-        self._capture(x, y, yaw)
+        self._capture(x, y, yaw, i)
 
     def _capture(self, x, y, yaw, i):
         client.request(('vset /camera/0/location {x} {y} {z}').format(
